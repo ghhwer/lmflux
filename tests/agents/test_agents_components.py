@@ -1,5 +1,5 @@
 import unittest
-from lmflux.agents.components import AgentRef, Context
+from src.lmflux.agents.components import AgentRef, Context
 
 class TestAgentRef(unittest.TestCase):
     def test_init(self):

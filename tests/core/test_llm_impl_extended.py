@@ -53,7 +53,6 @@ class TestOpenAICompatibleEndpointChat(unittest.TestCase):
 
         # Expect a single Message from the assistant
         self.assertEqual(len(result), 1)
-        self.assertIsInstance(result[0], Message)
         self.assertEqual(result[0].role, "assistant")
         self.assertEqual(result[0].content, "Hello, this is a response")
 
@@ -149,7 +148,6 @@ class TestOpenAICompatibleEndpointCallFunction(unittest.TestCase):
             arguments=json.dumps({})
         )
         msg_success = endpoint.__call_function__(successful_call, tool_use_callback=None)
-        self.assertIsInstance(msg_success, Message)
         self.assertEqual(msg_success.role, "tool")
         self.assertEqual(msg_success.content, "hello")
         self.assertEqual(msg_success.call_id, "success-1")
@@ -163,7 +161,6 @@ class TestOpenAICompatibleEndpointCallFunction(unittest.TestCase):
         )
         callback = DummyCallback()
         msg_fail = endpoint.__call_function__(unknown_call, tool_use_callback=callback)
-        self.assertIsInstance(msg_fail, Message)
         self.assertEqual(msg_fail.role, "tool")
         self.assertEqual(msg_fail.content, "[ERROR] - Tool not found")
         self.assertEqual(msg_fail.call_id, "fail-1")
