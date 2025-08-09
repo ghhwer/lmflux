@@ -14,7 +14,7 @@ pip install lmflux
 
 ## Documentation
 
-Examples and documentation is available at https://github.com/ghhwer/lmflux.
+Examples and documentation is available at https://lmflux.readthedocs.io/en/latest/.
 
 ## License
 
