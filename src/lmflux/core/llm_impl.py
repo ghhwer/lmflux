@@ -62,7 +62,7 @@ class OpenAICompatibleEndpoint(LLMModel):
                 }
             } for tool_call in tool_calls]
         return None
-    
+        
     def __chat_endpoint__(self, tool_use_callback:callable, max_turns=3) -> list[Message]:
         accum_messages = Conversation([])
         conversation_dump = self.conversation.dump_conversation()
@@ -78,13 +78,14 @@ class OpenAICompatibleEndpoint(LLMModel):
                 tools=self.compiled_tools,
                 **self.options.dict()
             )
-            
+            message = chat_completion.choices[0].message
+            reasoning_content = message.reasoning_content if hasattr(message, 'reasoning_content') else None
             accum_messages.add_message(
                 Message(
-                    chat_completion.choices[0].message.role, 
-                    content=chat_completion.choices[0].message.content,
-                    reasoning_content=chat_completion.choices[0].message.reasoning_content,
-                    tool_calls = self.__parse_tool_call__(chat_completion.choices[0].message.tool_calls)   
+                    message.role, 
+                    content=message.content,
+                    reasoning_content=reasoning_content,
+                    tool_calls = self.__parse_tool_call__(message.tool_calls)   
                 )
             )
             if chat_completion.choices[0].message.tool_calls:
