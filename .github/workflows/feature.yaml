@@ -41,12 +41,14 @@ jobs:
     needs: [test, build]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          head: ${{ github.head_ref }}
           base: main
-          title: "Automated PR from ${{ github.head_ref }}"
+          title: "Automated PR from ${{ github.ref_name }}"
           body: "This is an automated pull request created by GitHub Actions."
-          branch: automated-pr-${{ github.run_number }}
