@@ -52,7 +52,7 @@ def tool(func:callable):
                 ToolParam(
                     type=found_type, 
                     name=param.name, 
-                    is_required=param.POSITIONAL_ONLY
+                    is_required=(not param.kind == param.KEYWORD_ONLY)
                 )
             )
         else:

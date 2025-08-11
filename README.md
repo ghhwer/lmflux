@@ -1,6 +1,6 @@
 # lmflux
 
-A lightweight library for managing LLM flux workflows.
+A library for managing agentic LLM workflows.
 
 ## Overview
 
