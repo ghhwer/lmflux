@@ -1,11 +1,13 @@
 import unittest
+from unittest.mock import MagicMock
 from unittest.mock import patch
 from lmflux.core.components import LLMOptions, Message, SystemPrompt, TemplatedPrompt, ToolParam, Tool, Conversation
+from lmflux.core.templates import Templates
 
 class TestLLMOptions(unittest.TestCase):
     def test_dict(self):
         options = LLMOptions(temperature=0.5)
-        self.assertEqual(options.dict(), {'temperature': '0.5'})
+        self.assertEqual(options.dict(), {'temperature': 0.5})
 
 class TestMessage(unittest.TestCase):
     def test_dump_message(self):
@@ -18,12 +20,13 @@ class TestSystemPrompt(unittest.TestCase):
         message = prompt.get_message()
         self.assertIsInstance(message, Message)
 class TestTemplatedPrompt(unittest.TestCase):
-    @patch('lmflux.core.components.get_template')
-    def test_get_message(self, mock_result):
-        mock_result.return_value = 'mocked stuff'
+    def test_get_message(self):
+        Templates().clear()
+        Templates().put_template("test_prompt", "hello")
         prompt = TemplatedPrompt("test_prompt", "role")
         message = prompt.get_message({})
         self.assertIsInstance(message, Message)
+        Templates().clear()
 
 class TestToolParam(unittest.TestCase):
     def test_make_definition(self):

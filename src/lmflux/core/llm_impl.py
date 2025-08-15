@@ -11,13 +11,15 @@ class EchoLLM(LLMModel):
         return [self.conversation[-1]]
 
 class OpenAICompatibleEndpoint(LLMModel):
-    def __init__(self, model_id:str, system_prompt:SystemPrompt, options:LLMOptions=None):
+    def __init__(self, model_id:str, system_prompt:SystemPrompt, options:LLMOptions=None, include_tool_name:bool=True, tool_response_role="tool"):
         super().__init__(model_id=model_id, system_prompt=system_prompt, options=options)
 
         self.client = openai.OpenAI(
             base_url=os.environ.get('OPENAI_API_BASE'),
             api_key=os.environ.get('OPENAI_API_KEY'),
         )
+        self.include_tool_name = include_tool_name
+        self.tool_response_role = tool_response_role
         self.last_len_tools = 0
         self.compiled_tools = None
 
@@ -45,11 +47,19 @@ class OpenAICompatibleEndpoint(LLMModel):
             result = "[ERROR] - Tool not found"
         if tool_use_callback:
             tool_use_callback(tool_call, result)
-        return Message(
-            role="tool", content=str(result),
-            call_id=tool_call_id,
-            name=function_name
-        )
+        if self.include_tool_name:
+            return Message(
+                role=self.tool_response_role, 
+                content=str(result),
+                call_id=tool_call_id,
+                name=function_name
+            )
+        else:
+            return Message(
+                role=self.tool_response_role, 
+                content=str(result),
+                call_id=tool_call_id
+            )
     
     def __parse_tool_call__(self, tool_calls):
         if tool_calls:
