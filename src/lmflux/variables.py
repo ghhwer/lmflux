@@ -1,3 +1,3 @@
 import os
 
-PROMPT_LOCATION = os.environ.get("PROMPT_LOCATION")
+PROMPT_LOCATION = os.environ.get("PROMPT_LOCATION", "__UNDEFINED__")

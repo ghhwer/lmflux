@@ -1,23 +1,16 @@
+from lmflux.core.templates import Templates
 import json
-from lmflux import variables
 from dataclasses import dataclass, asdict
 from uuid import uuid4
-
-def get_template(prompt_id):
-    prompt_path = prompt_id.split('.')
-    path = '/'.join(prompt_path[:-1])
-    sub_location = f'{path}/{prompt_path[-1]}'
-    with open(f'{variables.PROMPT_LOCATION}/{sub_location}.md') as f:
-        return f.read()
+import os
 
 ## BASE LLM ##
-@dataclass
 class LLMOptions():
-    temperature:float = 0.7
-    max_tokens:int = None
-    
+    def __init__(self, *args, **kwargs):
+        self.__options = {}
+        self.__options.update(kwargs)    
     def dict(self):
-        return {k: str(v) for k, v in asdict(self).items() if v is not None}
+        return self.__options
 
 @dataclass
 class Message:
@@ -51,6 +44,8 @@ class Message:
             main_str += f"\n\ttool call: {self.call_id}"
         if self.tool_calls:
             main_str += f"\n\ttool call: {self.tool_calls}"
+        if self.reasoning_content:
+            mains_str += f"\n-----\n\treasoning: {self.reasoning_content}\n-----\n"
         if self.content:
             main_str += f"\n\tcontent: {self.content}"
         return main_str
@@ -65,10 +60,10 @@ class SystemPrompt:
     
     def get_message(self)->Message:
         if self.system_prompt_id:
-            content = get_template(self.system_prompt_id)
-            message = Message(role="system", content=content)
+            content = Templates().get_template(self.system_prompt_id)
         else:
-            message = Message(role="system", content="You are a helpful assistant")
+            content = "You are a helpful assistant."
+        message = Message(role="system", content=content)
         return message
     
 @dataclass
@@ -77,9 +72,7 @@ class TemplatedPrompt:
     role: str
     
     def get_message(self, context:dict, )->Message:
-        content = get_template(self.prompt_id)
-        for key, value in context.items():
-            content = content.replace('{{'+key+'}}', str(value))
+        content = Templates().get_with_context(self.prompt_id, context)
         message = Message(role=self.role, content=content)
         return message
     
