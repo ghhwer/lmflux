@@ -3,6 +3,7 @@ from lmflux.core.components import Tool, Conversation
 from lmflux.agents.sessions import Session
 from lmflux.agents.structure import Agent
 from lmflux.flow.toolbox import ToolBox
+from lmflux.utils.signature_checker import check_compatible
 
 import inspect
 
@@ -92,87 +93,47 @@ class AgentDefinition:
     def __init__(self, llm:LLMModel, agent_id:str):
         self.llm = llm
         self.agent_id = agent_id
-        self.toolbox = None
+        self.toolbox = ToolBox()
         self.pre_act_function = empty_act
         self.post_act_function = empty_act
         self.custom_act_function = default_act
         self.tool_callback_function = default_tool_callback
         self.conversation_callback_function = default_conversation_callback_function
-        
-    def __get_signatures__(self, function:callable):
-        signature = inspect.signature(function)
-        return {
-            param.name: param.annotation
-            for param in signature.parameters.values()
-        }
-    
-    def __check_compatible__(self, function: callable, func_name: str, expected_params: list):
-        """
-        Check if a function is compatible with the expected signature.
 
-        Args:
-        - function (callable): The function to check.
-        - func_name (str): The name of the function.
-        - expected_params (list): A list of dictionaries containing the expected parameter name, type, and position.
-
-        Returns:
-        - function (callable): The original function if it's compatible.
-
-        Raises:
-        - AttributeError: If the function is not compatible with the expected signature.
-        """
-        sigs = self.__get_signatures__(function)
-        param_count = 0
-        params_match = [False] * len(expected_params)
-
-        for param_name, py_type in sigs.items():
-            for i, expected_param in enumerate(expected_params):
-                if (param_name == expected_param['name'] and 
-                    (expected_param['type'] is None or py_type == expected_param['type']) and 
-                    param_count == expected_param['position']):
-                    params_match[i] = True
-            param_count += 1
-
-        if all(params_match) and param_count == len(expected_params):
-            return function
-
-        correct_sig = f"def {function.__name__}(" + ", ".join([f"{param['name']}: {param['type'].__name__ if param['type'] else 'any'}" for param in expected_params]) + "):..."
-        raise AttributeError(f"{func_name} must be defined as {correct_sig}")
-
-    def with_tools(self, toolbox: ToolBox):
-        self.toolbox = toolbox
+    def with_tools(self, *tools:callable):
+        self.toolbox.__add_tools__(*tools)
         return self
     
     def with_pre_act(self, pre_act_function:callable):
-        self.pre_act_function = self.__check_compatible__(
+        self.pre_act_function = check_compatible(
             pre_act_function, "Pre Act",
             EXPECTED_ACT_SIGNATURE
         )
         return self
     
     def with_post_act(self, post_act_function:callable):
-        self.post_act_function = self.__check_compatible__(
+        self.post_act_function = check_compatible(
             post_act_function, "Post Act",
             EXPECTED_ACT_SIGNATURE
         )
         return self
     
-    def with_custom_act(self, custom_act_function:callable):
-        self.custom_act_function = self.__check_compatible__(
+    def with_act(self, custom_act_function:callable):
+        self.custom_act_function = check_compatible(
             custom_act_function, "Custom Act", 
             EXPECTED_ACT_SIGNATURE
         )
         return self
 
     def with_tool_callback(self, tool_callback:callable):
-        self.tool_callback_function = self.__check_compatible__(
+        self.tool_callback_function = check_compatible(
             tool_callback, "Tool Callback", 
             EXPECTED_TOOL_CALLBACK_SIGNATURE
         )
         return self
     
     def with_conversation_update_callback(self, conversation_update_callback:callable):
-        self.conversation_callback_function = self.__check_compatible__(
+        self.conversation_callback_function = check_compatible(
             conversation_update_callback, "Conversation Update Callback", 
             EXPECTED_CONVERSATION_UPDATE_SIGNATURE
         )

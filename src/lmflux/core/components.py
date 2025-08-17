@@ -57,12 +57,13 @@ class Message:
 @dataclass
 class SystemPrompt:
     system_prompt_id: str = None
+    content:str = "You are a helpful assistant."
     
     def get_message(self)->Message:
         if self.system_prompt_id:
             content = Templates().get_template(self.system_prompt_id)
         else:
-            content = "You are a helpful assistant."
+            content = self.content
         message = Message(role="system", content=content)
         return message
     

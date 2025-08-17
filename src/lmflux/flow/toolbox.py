@@ -1,7 +1,4 @@
-from lmflux.core.llms import LLMModel
 from lmflux.core.components import Tool, ToolParam
-from lmflux.agents.sessions import Session
-from lmflux.agents.structure import Agent
 
 import inspect
 from typing import get_args, get_origin
@@ -79,12 +76,15 @@ def tool(func:callable):
 class ToolBox:
     def __init__(self):
         self.tools = []
-    def __add_tool__(self, tool: Tool):
-        self.tools.append(tool)
-    def add_to_toolbox(self, func: callable):
+
+    def __add_tool__(self, tool: callable):
         try:
-            func.__getattribute__('__is_tool_definition__')
+            tool.__getattribute__('__is_tool_definition__')
         except AttributeError as e:
             raise AttributeError("The function passed to `add_to_toolbox` is not a proper tool, did you add the @tool decorator while declaring it?")
-        else:
-            self.__add_tool__(func.__getattribute__("__tool_definition__"))
+        tool_def = tool.__getattribute__("__tool_definition__")
+        self.tools.append(tool_def)
+    
+    def __add_tools__(self, *tools:callable):
+        for tool in tools:
+            self.__add_tool__(tool)

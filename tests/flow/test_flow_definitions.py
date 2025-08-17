@@ -6,7 +6,7 @@ from lmflux.core.llm_impl import EchoLLM
 from lmflux.flow.toolbox import ToolBox
 from lmflux.agents.sessions import Session
 from lmflux.agents.structure import Agent
-from lmflux.flow import create_agent, new_toolbox, tool
+from lmflux.flow import create_agent, tool
 
 class TestDefinedAgent(unittest.TestCase):
     def test_init(self):
@@ -46,16 +46,14 @@ def some_tool(a: str):
 class TestAgentE2E(unittest.TestCase):
     def test_agent_e2e(self):
         llm = EchoLLM("llm_id", SystemPrompt())
-        tb = new_toolbox()
-        tb.add_to_toolbox(some_tool)
         agent = (
             create_agent(llm, 'test-agent')
                 .with_conversation_update_callback(some_conversation_callback_function)
-                .with_custom_act(some_act)
+                .with_act(some_act)
                 .with_pre_act(some_act)
                 .with_post_act(some_act)
                 .with_tool_callback(some_tool_callback)
-                .with_tools(tb)
+                .with_tools(some_tool)
                 .build()
         )
         agent.reset_agent_state()
@@ -68,7 +66,7 @@ class TestAgentE2E(unittest.TestCase):
             agent = (
                 create_agent(llm, 'test-agent')
                     .with_conversation_update_callback(some_conversation_callback_function)
-                    .with_custom_act(some_badly_defined)
+                    .with_act(some_badly_defined)
                     .build()
             )
         self.assertIn('must be defined as', str(cm.exception))
