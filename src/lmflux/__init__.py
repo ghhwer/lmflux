@@ -37,5 +37,5 @@ def openai_agent(
     llm = OpenAICompatibleEndpoint(model_id, SystemPrompt(content=system_prompt), options=options)
     agent = create_agent(llm, agent_id=agent_id)
     if tools:
-        agent.with_tools(tools)
+        agent.with_tools(*tools)
     return agent.build()

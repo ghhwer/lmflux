@@ -13,15 +13,6 @@ class EchoLLM(LLMModel):
 class TestLLMModel(unittest.TestCase):
     def test_init(self):
         model = EchoLLM("model_id", SystemPrompt())
-        root_param = ToolParam(
-            type="object",
-            name="parameters",
-            property=[ToolParam("object", "root")]
-        )
-        tool = Tool("name", "description", root_param, lambda: None)        
-        model.add_tools(
-            [tool]
-        )
         self.assertEqual(model.model_id, "model_id")
 
     def test_chat(self):

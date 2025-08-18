@@ -45,7 +45,7 @@ class Message:
         if self.tool_calls:
             main_str += f"\n\ttool call: {self.tool_calls}"
         if self.reasoning_content:
-            mains_str += f"\n-----\n\treasoning: {self.reasoning_content}\n-----\n"
+            main_str += f"\n-----\n\treasoning: {self.reasoning_content}\n-----\n"
         if self.content:
             main_str += f"\n\tcontent: {self.content}"
         return main_str

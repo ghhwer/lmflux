@@ -1,4 +1,5 @@
 from lmflux.core.components import Tool, ToolParam
+from typing import Callable, Any, Union
 
 import inspect
 from typing import get_args, get_origin
@@ -77,7 +78,10 @@ class ToolBox:
     def __init__(self):
         self.tools = []
 
-    def __add_tool__(self, tool: callable):
+    def __add_tool__(self, tool: Union[Callable[..., Any], Tool]):
+        if isinstance(tool, Tool):
+            self.tools.append(tool)
+            return
         try:
             tool.__getattribute__('__is_tool_definition__')
         except AttributeError as e:

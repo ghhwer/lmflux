@@ -55,11 +55,11 @@ class Session:
     def set(self, key, value):
         self.context.set(key, value)
     def get(self, key, default=None):
-        self.context.get(key, default=default)
+        return self.context.get(key, default=default)
     def set_cumulative(self, key, value):
         self.context.set_cumulative(key, value)
     def get_cumulative(self, key):
-        self.context.get_cumulative(key)
+        return self.context.get_cumulative(key)
             
     def context_as_dict(self) -> dict:
         return self.context.get_context()
