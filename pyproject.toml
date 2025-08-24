@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lmflux"
-version = "0.0.6"
-description = "LmFlux is a declarative Open-Source Agentic framework."
+version = "0.1.0"
+description = "LmFlux is a declarative/imperative Open-Source Agentic framework."
 readme = "README.md"
 license = {text = "MIT"}
 authors = [{name = "Caio Cominato", email = "caiopetrellicominato@gmail.com"}]

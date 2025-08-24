@@ -1,5 +1,5 @@
 from lmflux.core.llms import LLMModel
-from lmflux.core.components import (SystemPrompt, LLMOptions, Message, Conversation)
+from lmflux.core.components import (SystemPrompt, LLMOptions, Message, Conversation, ToolRequest)
 import openai
 import os
 
@@ -34,7 +34,8 @@ class OpenAICompatibleEndpoint(LLMModel):
         ]
         self.last_len_tools = len(self.tools)
     
-    def __call_function__(self, tool_call, tool_use_callback:callable) -> Message:
+    def __call_function__(self, tool_request:ToolRequest, tool_use_callback:callable) -> Message:
+        tool_call = tool_request.raw_tool_call
         tool_call_id = tool_call.id
         function_name = tool_call.function.name
         args = tool_call.function.arguments
@@ -46,7 +47,7 @@ class OpenAICompatibleEndpoint(LLMModel):
         if not result:
             result = "[ERROR] - Tool not found"
         if tool_use_callback:
-            tool_use_callback(tool_call, result)
+            tool_use_callback(tool_request, result)
         if self.include_tool_name:
             return Message(
                 role=self.tool_response_role, 
@@ -90,18 +91,25 @@ class OpenAICompatibleEndpoint(LLMModel):
             )
             message = chat_completion.choices[0].message
             reasoning_content = message.reasoning_content if hasattr(message, 'reasoning_content') else None
+            message = Message(
+                message.role, 
+                content=message.content,
+                reasoning_content=reasoning_content,
+                tool_calls = self.__parse_tool_call__(message.tool_calls)   
+            )
             accum_messages.add_message(
-                Message(
-                    message.role, 
-                    content=message.content,
-                    reasoning_content=reasoning_content,
-                    tool_calls = self.__parse_tool_call__(message.tool_calls)   
-                )
+                message
             )
             if chat_completion.choices[0].message.tool_calls:
                 for tool_call in chat_completion.choices[0].message.tool_calls:
                     accum_messages.add_message(
-                        self.__call_function__(tool_call, tool_use_callback)
+                        self.__call_function__(
+                            ToolRequest(
+                                message,
+                                raw_tool_call=tool_call
+                            ), 
+                            tool_use_callback
+                        )
                     )
                     tool_called = True
             if not tool_called:

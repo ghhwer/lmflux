@@ -4,7 +4,7 @@ A library for managing agentic LLM workflows.
 
 ## Overview
 
-`lmflux` provides a declarative framework fow executing LLM-based flows and multi-agent setups.
+`lmflux` provides a declarative/imperative framework fow executing LLM-based flows and multi-agent setups.
 
 ## Installation
 

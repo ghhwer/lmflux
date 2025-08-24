@@ -1,6 +1,7 @@
 from lmflux.core.templates import Templates
 import json
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, field
+from typing import Any
 from uuid import uuid4
 import os
 
@@ -17,12 +18,12 @@ class Message:
     role: str
     content: str
     
-    reasoning_content: str = None
-    call_id: str = None    
-    tool_calls: list[dict] = None
-    name: str = None
+    reasoning_content: str = field(default=None)
+    call_id: str = field(default=None)    
+    tool_calls: list[dict] = field(default=None)
+    name: str = field(default=None)
 
-    message_id: str = str(uuid4())
+    message_id: str = field(default_factory=lambda: str(uuid4()))
 
     def dump_message(self):
         base_data = {"role": self.role, "content": self.content if self.content else ""}
@@ -112,6 +113,11 @@ class ToolParam:
                 'additionalProperties': self.additional_properties
             }
         return self.name, data, self.is_required
+
+@dataclass
+class ToolRequest:
+    message: Message
+    raw_tool_call: Any
 
 @dataclass
 class Tool:

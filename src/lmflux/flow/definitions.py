@@ -28,7 +28,6 @@ class DefinedAgent(Agent):
     def add_tool_callbacks(self, *funcs:callable, validate_only=False):
         for func in funcs:
             self.add_tool_callback(func, validate_only=validate_only)
-        
     
     def get_tools(self) -> list[Tool]:
         if (self.toolbox):

@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import Mock
-from lmflux.core.components import SystemPrompt, Conversation
+from lmflux.core.components import SystemPrompt, Conversation, ToolRequest
 from lmflux.flow.definitions import DefinedAgent, AgentDefinition
 from lmflux.core.llm_impl import EchoLLM
 from lmflux.flow.toolbox import ToolBox
@@ -27,7 +27,7 @@ class TestAgentDefinition(unittest.TestCase):
         self.assertIsInstance(agent, DefinedAgent)
 
 
-def some_tool_callback(agent: Agent, tool_call, result, session: Session):
+def some_tool_callback(agent: Agent, tool_call:ToolRequest, result, session: Session):
     pass
 
 def some_conversation_callback_function_bad(agent: Agent,):

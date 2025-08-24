@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from lmflux.core.llms import LLMModel
 from lmflux.core.components import Conversation
-from lmflux.core.components import Message, Tool
+from lmflux.core.components import Message, Tool, ToolRequest
 from lmflux.agents.components import AgentRef
 from lmflux.agents.sessions import Session
 from lmflux.utils.signature_checker import check_compatible
@@ -25,7 +25,7 @@ class Agent(ABC):
     @abstractmethod
     def add_tool(self, tool: Tool): pass
     
-    def tool_callback(self, tool_call, result, session: Session):
+    def tool_callback(self, tool_call:ToolRequest, result, session: Session):
         for callback in self.tool_callbacks:
             callback(self, tool_call, result, session)
     
@@ -69,7 +69,7 @@ class Agent(ABC):
 
 EXPECTED_TOOL_CALLBACK_SIGNATURE = [
     {'name': 'agent', 'type': Agent, 'position': 0},
-    {'name': 'tool_call', 'type': None, 'position': 1},
+    {'name': 'tool_call', 'type': ToolRequest, 'position': 1},
     {'name': 'result', 'type': None, 'position': 2},
     {'name': 'session', 'type': Session, 'position': 3}
 ]
