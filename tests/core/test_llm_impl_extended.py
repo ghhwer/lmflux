@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import json
 
 from lmflux.core.llm_impl import OpenAICompatibleEndpoint, NamedOAICompatible
-from lmflux.core.components import SystemPrompt, ToolParam, Tool, Message
+from lmflux.core.components import SystemPrompt, ToolParam, Tool, Message, ToolRequest
 
 class DummyCallback:
     def __init__(self):
@@ -120,7 +120,7 @@ class TestOpenAICompatibleEndpointChat(unittest.TestCase):
         # Verify callback was invoked once with the correct tool call and result
         self.assertEqual(len(callback.calls), 1)
         called_tool, called_result = callback.calls[0]
-        self.assertEqual(called_tool.id, "call-1")
+        self.assertEqual(called_tool.raw_tool_call.id, "call-1")
         self.assertEqual(called_result, "dummy_result")
 
 class TestOpenAICompatibleEndpointCallFunction(unittest.TestCase):
@@ -142,10 +142,13 @@ class TestOpenAICompatibleEndpointCallFunction(unittest.TestCase):
         endpoint.tools = [dummy_tool]
 
         # Successful tool call
-        successful_call = make_tool_call(
-            id_="success-1",
-            name="my_tool",
-            arguments=json.dumps({})
+        successful_call = ToolRequest(
+            message=None,
+            raw_tool_call=make_tool_call(
+                id_="success-1",
+                name="my_tool",
+                arguments=json.dumps({})
+            )
         )
         msg_success = endpoint.__call_function__(successful_call, tool_use_callback=None)
         self.assertEqual(msg_success.role, "tool")
@@ -154,10 +157,13 @@ class TestOpenAICompatibleEndpointCallFunction(unittest.TestCase):
         self.assertEqual(msg_success.name, "my_tool")
 
         # Unsuccessful tool call (tool not found)
-        unknown_call = make_tool_call(
-            id_="fail-1",
-            name="unknown_tool",
-            arguments=json.dumps({})
+        unknown_call = ToolRequest(
+            message=None,
+            raw_tool_call=make_tool_call(
+                id_="fail-1",
+                name="unknown_tool",
+                arguments=json.dumps({})
+            )
         )
         callback = DummyCallback()
         msg_fail = endpoint.__call_function__(unknown_call, tool_use_callback=callback)

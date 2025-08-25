@@ -1,11 +1,39 @@
-site_name: Paramiko Mock
+site_name: LMFlux
+docs_dir: docs
 theme:
   name: material
+  logo: assets/logo_highres/logo_just_face.png
+  favicon: assets/favicon.ico
+  # Light & dark palettes – Material will switch automatically (or via the toggle)
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: "#ff5733"    # ← rgb(255, 87, 51) – light‑mode primary colour
+      accent:  "#2196f3"    # ← rgb(33, 150, 243) – optional accent colour
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: "#ff5733"    # same colour for dark mode (or choose another)
+      accent:  "#2196f3"
+
+  features:
+    - navigation.tabs
+    - navigation.top
+    - content.code.annotate
+    - content.code.copy
+    - palette.toggle      # adds the light/dark toggle button
+extra_css:
+  - custom.css            # <-- point to the file you’ll create
 nav:
-  - Home: index.md
-  - Contributing: contributing.md
+  - Home:
+    - What is LMFlux: index.md
+    - Contributing: home/contributing.md
+  - Getting Started:
+    - Overview: getting_started/index.md
+    - Graph Types: getting_started/graph_types.md
 plugins:
   - search
+  - awesome-pages
   - mkdocs-autoapi:
       autoapi_dir: src
       autoapi_add_nav_entry: true

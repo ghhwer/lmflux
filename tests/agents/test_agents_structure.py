@@ -13,17 +13,11 @@ class NopAgent(Agent):
     def get_tools(self) -> list[Tool]:
         return []
         
-    def initialize(self, tools:list[Tool]) -> tuple[LLMModel, str]:
+    def initialize(self) -> tuple[LLMModel, str]:
         sp = SystemPrompt()
         return EchoLLM("nop_agent", sp, None), "nop_agent"
     
-    def pre_act(self, session: Session):
-        pass
-    
-    def post_act(self, session: Session):
-        pass
-    
-    def act(self, session: Session):
+    def add_tool(self, tool:Tool):
         pass
     
     def tool_callback(self, tool_call, result, session: Session):
@@ -37,35 +31,13 @@ class TestAgent(unittest.TestCase):
     def test_get_tools(self):
         agent = NopAgent()
         # Mock get_tools method
-        with unittest.mock.patch.object(agent, 'get_tools', return_value=[]):
-            self.assertEqual(agent.agent_tools, [])
+        self.assertEqual(agent.get_tools(), [])
 
     def test_initialize(self):
         agent = NopAgent()
         # Mock initialize method
         with unittest.mock.patch.object(agent, 'initialize', return_value=(object(), 'test_id')):
             self.assertEqual(agent.agent_id, 'nop_agent')
-
-    def test_pre_act(self):
-        agent = NopAgent()
-        session = Session()
-        # Mock pre_act method
-        with unittest.mock.patch.object(agent, 'pre_act'):
-            agent.pre_act(session)
-
-    def test_post_act(self):
-        agent = NopAgent()
-        session = Session()
-        # Mock post_act method
-        with unittest.mock.patch.object(agent, 'post_act'):
-            agent.post_act(session)
-
-    def test_act(self):
-        agent = NopAgent()
-        session = Session()
-        # Mock act method
-        with unittest.mock.patch.object(agent, 'act'):
-            agent.act(session)
 
     def test_conversate_and_log_step(self):
         agent = NopAgent()

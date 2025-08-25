@@ -104,13 +104,13 @@ class TestToolBox(unittest.TestCase):
     def test_non_tool_func_toolbox(self):
         box = ToolBox()
         with self.assertRaises(AttributeError) as cm:
-            box.add_to_toolbox(some_not_tool)
+            box.__add_tool__(some_not_tool)
         self.assertIn('The function passed to `add_to_toolbox` is not a proper tool, did you add the @tool decorator while declaring it?', str(cm.exception))
     
     def test_add_to_toolbox(self):
         box = ToolBox()
         # Mock tool definition
-        box.add_to_toolbox(some_tool)
+        box.__add_tool__(some_tool)
 
 if __name__ == '__main__':
     unittest.main()

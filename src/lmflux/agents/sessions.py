@@ -51,5 +51,15 @@ class Session:
         else:
             self.context = Context()
     
+    # Mirror the context functions for "ease of use"
+    def set(self, key, value):
+        self.context.set(key, value)
+    def get(self, key, default=None):
+        return self.context.get(key, default=default)
+    def set_cumulative(self, key, value):
+        self.context.set_cumulative(key, value)
+    def get_cumulative(self, key):
+        return self.context.get_cumulative(key)
+            
     def context_as_dict(self) -> dict:
         return self.context.get_context()

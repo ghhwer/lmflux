@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lmflux"
-version = "0.0.5"
-description = "LmFlux is a declarative Open-Source Agentic framework."
+version = "0.1.0"
+description = "LmFlux is a declarative/imperative Open-Source Agentic framework."
 readme = "README.md"
 license = {text = "MIT"}
 authors = [{name = "Caio Cominato", email = "caiopetrellicominato@gmail.com"}]
@@ -13,16 +13,27 @@ requires-python = ">=3.11"
 dependencies = [
     "dotenv>=0.9.9",
     "jsonpath-ng>=1.7.0",
+    "networkx>=3.5",
     "openai>=1.95.1",
     "unidecode>=1.4.0",
 ]
 
 [dependency-groups]
+# Packages required only for running the test suite
 dev = [
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
-    "setuptools>=61.0",
+]
+
+# Packages required to build a distribution and push it to PyPI
+publish = [
     "build",
-    "wheel",
     "twine"
+]
+
+docs = [
+    "mkdocs-autoapi==0.4.0",
+    "mkdocs-material==9.6.7",
+    "mkdocstrings[python]==0.29.0",
+    "mkdocs-awesome-pages-plugin"
 ]
