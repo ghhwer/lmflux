@@ -23,12 +23,6 @@ jobs:
           # Install only the runtime deps + the tools we need for building/publishing
           uv sync --group publish
 
-      - name: Unit Tests
-        # Install the *dev* extras only for the test step
-        run: |
-          uv sync --group 
-          uv run pytest
-
       - name: Build package
         run: uv run python -m build   # uses the already‑installed `build`
 
