@@ -50,7 +50,7 @@ print(resp.content)   # → 34229
 
 ## Running in a Jupyter Notebook
 
-Below are two notebook‑friendly snippets for getting started with "agentic workflows" (Read supported architectures [here](getting_started/graph_types/))  
+Below are two notebook‑friendly snippets for getting started with "agentic workflows" (Read supported architectures [here](https://lmflux.readthedocs.io/en/latest/getting_started/graph_types/))  
 The markdown cells (preceding each code block) explain what is happening.
 
 ### 1. Pre‑defined LLM tasks
@@ -227,4 +227,4 @@ flowchart TB
 ```
 
 ## Want more examples?
-Check the  [Getting Started](/getting_started). page for additional use‑cases, deeper API explanations.
+Check the  [Getting Started](https://lmflux.readthedocs.io/en/latest/getting_started/). page for additional use‑cases, deeper API explanations.
