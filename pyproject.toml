@@ -35,4 +35,5 @@ docs = [
     "mkdocs-autoapi==0.4.0",
     "mkdocs-material==9.6.7",
     "mkdocstrings[python]==0.29.0",
+    "mkdocs-awesome-pages-plugin"
 ]

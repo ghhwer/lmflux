@@ -1,5 +1,5 @@
 # Core component
-from lmflux.core.components import (SystemPrompt, Message, Conversation, LLMOptions)
+from lmflux.core.components import (SystemPrompt, Message, Conversation, LLMOptions, TemplatedPrompt)
 from lmflux.core.templates import Templates
 from lmflux.core.llm_impl import OpenAICompatibleEndpoint
 

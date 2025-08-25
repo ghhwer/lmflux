@@ -2,6 +2,7 @@ credentials.json
 token.json
 run.cmd
 __history__/*
+__experiments__/*
 
 batch_process_mails.json
 batch_ai_decisions.json

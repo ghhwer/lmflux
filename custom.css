@@ -1,0 +1,36 @@
+/* Make the main containers a bit rounder */
+.md-header,
+.md-nav,
+.md-sidebar,
+.md-main,
+.md-footer {
+    border-radius: 8px;               /* subtle rounding */
+}
+
+/* Card‑style content boxes (e.g., admonitions, tabs) */
+.admonition,
+.md-typeset .tabbed-set,
+.md-typeset .tabbed-labels {
+    border-radius: 6px;
+}
+
+/* Slightly softer background for code blocks */
+.highlight pre {
+    background-color: var(--md-code-bg);
+    border-radius: 4px;
+}
+
+/* Adjust link colours for both themes (Material provides CSS vars) */
+a {
+    color: var(--md-primary-fg-color);
+}
+a:hover {
+    color: var(--md-accent-fg-color);
+}
+
+/* Ensure the dark theme continues to look good */
+[data-md-color-scheme="slate"] .md-sidebar,
+[data-md-color-scheme="slate"] .md-header,
+[data-md-color-scheme="slate"] .admonition {
+    background-color: var(--md-default-bg-color);
+}
