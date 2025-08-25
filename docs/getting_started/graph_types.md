@@ -45,9 +45,6 @@ flowchart LR
     style A stroke:#000,stroke-width:3px
 ```
 
-*The `flowchart LR` direction (left‑to‑right) gives a cleaner, more modern look compared to the older top‑down layout.*
-
-
 ## Agent Mesh
 
 Agent Mesh systems orchestrate multiple agents that interact through dynamic relationships.  
