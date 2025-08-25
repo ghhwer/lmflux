@@ -1,7 +1,7 @@
 # LMFlux
 
 <div style="display:flex; align-items:center; gap:20px;">
-  <img src="docs/assets/logo_highres/logo_transparent.png" width="150" alt="LMFlux logo">
+  <img src="https://lmflux.readthedocs.io/en/latest/assets/logo_highres/logo_transparent.png" width="150" alt="LMFlux logo">
   <div>
     LMFlux is an open‑source library that helps create agentic workflows.
     It supports both declarative and imperative approaches for defining LLM‑based workflows.
